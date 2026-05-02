@@ -2,8 +2,6 @@
 description: Every weekday, create a GitHub issue summarising all open issues and pull requests, grouped by label.
 on:
   schedule: daily on weekdays
-features:
-  copilot-requests: true
 permissions:
   contents: read
   issues: read
