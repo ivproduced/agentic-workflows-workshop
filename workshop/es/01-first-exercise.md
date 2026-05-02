@@ -106,7 +106,32 @@ Y el cuerpo es una descripción en lenguaje natural de lo que el agente debe hac
 > [!NOTE]
 > Los archivos de flujos de trabajo agénticos son markdown normal — haz commit de ellos en el control de versiones como cualquier otro código. El `.lock.yml` se genera automáticamente y no debe editarse manualmente.
 
-## Parte 3 — Ejecutar el Flujo de Trabajo Manualmente
+## Parte 3 — Configurar el Token de Copilot
+
+Los flujos de trabajo agénticos necesitan un PAT (token de acceso personal) de grano fino para llamar a la API de Copilot. Ejecuta el comando de bootstrap interactivo, apuntando a **tu fork**:
+
+```bash
+gh aw secrets bootstrap --repo <tu-usuario>/agentic-workflows-workshop
+```
+
+Cuando se te solicite, abre el enlace para crear un nuevo PAT de grano fino con la siguiente configuración:
+
+| Ajuste | Valor |
+|---|---|
+| **Nombre del token** | `gh-aw-copilot` (o cualquier nombre que prefieras) |
+| **Propietario del recurso** | Tu cuenta **personal** de GitHub |
+| **Acceso al repositorio** | Todos los repositorios públicos |
+| **Permisos → Copilot → Copilot Requests** | Solo lectura |
+
+Genera el token, cópialo y pégalo en el prompt del terminal.
+
+> [!IMPORTANT]
+> El propietario del recurso debe ser la cuenta de GitHub que tiene tu **suscripción activa de Copilot** (Individual, Pro, Business o Enterprise). Si usas una cuenta de organización, selecciona la organización como propietario del recurso.
+
+> [!TIP]
+> Solo necesitas ejecutar `gh aw secrets bootstrap` una vez por repositorio. El secreto se almacena como un secreto de GitHub Actions llamado `COPILOT_GITHUB_TOKEN` en tu fork.
+
+## Parte 4 — Ejecutar el Flujo de Trabajo Manualmente
 
 Haz commit y push de los archivos generados, luego ejecuta el flujo de trabajo inmediatamente para probarlo:
 
@@ -116,10 +141,10 @@ git commit -m "Add daily digest workflow"
 git push
 ```
 
-Una vez subido, ejecuta una ejecución manual:
+Una vez subido, ejecuta una ejecución manual apuntando a **tu fork**:
 
 ```bash
-gh aw run daily-digest
+gh aw run daily-digest --repo <tu-usuario>/agentic-workflows-workshop
 ```
 
 Después de que la ejecución se complete (generalmente en menos de un minuto), abre GitHub y revisa la pestaña **Issues**. Deberías ver un nuevo issue titulado **Daily Digest – \<fecha de hoy\>**.

@@ -105,7 +105,32 @@ And the body is a plain-English description of what the agent should do.
 > [!NOTE]
 > Agentic workflow files are regular markdown — commit them to version control just like any other code. The `.lock.yml` is auto-generated and should not be edited by hand.
 
-## Part 3 — Trigger the Workflow Manually
+## Part 3 — Bootstrap the Copilot Secret
+
+Agentic workflows need a fine-grained PAT to call the Copilot API. Run the interactive bootstrap command, targeting **your fork**:
+
+```bash
+gh aw secrets bootstrap --repo <your-username>/agentic-workflows-workshop
+```
+
+When prompted, open the link to create a new fine-grained PAT and configure it as follows:
+
+| Setting | Value |
+|---|---|
+| **Token name** | `gh-aw-copilot` (or any name you like) |
+| **Resource owner** | Your **personal** GitHub account |
+| **Repository access** | All public repositories |
+| **Permissions → Copilot → Copilot Requests** | Read-only |
+
+Generate the token, copy it, and paste it into the terminal prompt.
+
+> [!IMPORTANT]
+> The resource owner must be the GitHub account that holds your **active Copilot subscription** (Individual, Pro, Business, or Enterprise). If you use an org-owned account, select the org as the resource owner instead.
+
+> [!TIP]
+> You only need to run `gh aw secrets bootstrap` once per repository. The secret is stored as a GitHub Actions secret named `COPILOT_GITHUB_TOKEN` in your fork.
+
+## Part 4 — Trigger the Workflow Manually
 
 Commit and push the generated files, then trigger the workflow immediately to test it:
 
@@ -115,10 +140,10 @@ git commit -m "Add daily digest workflow"
 git push
 ```
 
-Once pushed, trigger a manual run:
+Once pushed, trigger a manual run against **your fork**:
 
 ```bash
-gh aw run daily-digest
+gh aw run daily-digest --repo <your-username>/agentic-workflows-workshop
 ```
 
 After the run completes (usually under a minute), open GitHub and check the **Issues** tab. You should see a new issue titled **Daily Digest – \<today's date\>**.
@@ -131,6 +156,7 @@ After the run completes (usually under a minute), open GitHub and check the **Is
 - [ ] `gh aw init` completed and created files in `.github/aw/` and `.github/agents/`
 - [ ] `.github/workflows/daily-digest.md` exists in your repository
 - [ ] `.github/workflows/daily-digest.lock.yml` exists in your repository
+- [ ] `COPILOT_GITHUB_TOKEN` secret is set in your fork via `gh aw secrets bootstrap`
 - [ ] The workflow was pushed and triggered without errors
 - [ ] A new GitHub issue titled **Daily Digest – \<today's date\>** was created in your repository
 

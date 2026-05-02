@@ -106,7 +106,32 @@ E o corpo é uma descrição em linguagem natural do que o agente deve fazer.
 > [!NOTE]
 > Arquivos de agentic workflow são markdown comum — faça commit deles no controle de versão como qualquer outro código. O `.lock.yml` é gerado automaticamente e não deve ser editado manualmente.
 
-## Parte 3 — Disparar o Workflow Manualmente
+## Parte 3 — Configurar o Token do Copilot
+
+Os agentic workflows precisam de um PAT (token de acesso pessoal) de granularidade fina para chamar a API do Copilot. Execute o comando de bootstrap interativo apontando para o **seu fork**:
+
+```bash
+gh aw secrets bootstrap --repo <seu-usuario>/agentic-workflows-workshop
+```
+
+Quando solicitado, abra o link para criar um novo PAT de granularidade fina com as seguintes configurações:
+
+| Configuração | Valor |
+|---|---|
+| **Nome do token** | `gh-aw-copilot` (ou qualquer nome que preferir) |
+| **Proprietário do recurso** | Sua conta **pessoal** do GitHub |
+| **Acesso ao repositório** | Todos os repositórios públicos |
+| **Permissões → Copilot → Copilot Requests** | Somente leitura |
+
+Gere o token, copie-o e cole no prompt do terminal.
+
+> [!IMPORTANT]
+> O proprietário do recurso deve ser a conta do GitHub que possui sua **assinatura ativa do Copilot** (Individual, Pro, Business ou Enterprise). Se usar uma conta de organização, selecione a organização como proprietário do recurso.
+
+> [!TIP]
+> Você só precisa executar `gh aw secrets bootstrap` uma vez por repositório. O segredo é armazenado como um secret do GitHub Actions chamado `COPILOT_GITHUB_TOKEN` no seu fork.
+
+## Parte 4 — Disparar o Workflow Manualmente
 
 Faça commit e push dos arquivos gerados, depois dispare o workflow imediatamente para testá-lo:
 
@@ -116,10 +141,10 @@ git commit -m "Add daily digest workflow"
 git push
 ```
 
-Após o push, dispare uma execução manual:
+Após o push, dispare uma execução manual apontando para o **seu fork**:
 
 ```bash
-gh aw run daily-digest
+gh aw run daily-digest --repo <seu-usuario>/agentic-workflows-workshop
 ```
 
 Após a execução ser concluída (geralmente em menos de um minuto), abra o GitHub e verifique a aba **Issues**. Você deve ver uma nova issue intitulada **Daily Digest – \<data de hoje\>**.
